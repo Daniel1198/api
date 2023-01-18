@@ -6,33 +6,32 @@ if ($_POST) {
 
     // récupération des variables
 
+    $id = $_POST['id'];
     $lastname = $_POST['lastname'];
     $firstname = $_POST['firstname'];
     $email = $_POST['email'];
     $is_admin = $_POST['is_admin'];
-    $password = $_POST['password'];
 
     if (
         empty(trim($lastname)) || 
         empty(trim($firstname)) || 
         empty(trim($email)) || 
-        empty(trim($password)) ||
         is_null($lastname) ||
         is_null($firstname) ||
         is_null($email) ||
-        is_null($is_admin) ||
-        is_null($password)
+        is_null($is_admin)
     ) {
         retour_json(false, "Vérifiez que les champs ne sont pas vides.");
         return;
     }
-    
+
     if (
         empty($_FILES['user_profile']['name']) ||
         is_null($_FILES['user_profile']['name']) ||
         $_FILES['user_profile']['name'] == 'undefined'
     ) {
-        $image_link = "../uploaded_files/user.png";
+        $query = $pdo->prepare("UPDATE `users` SET `lastname`=:lastname,`firstname`=:firstname,`email`=:email,
+        `isadmin`=:isadmin WHERE `id`=:id");
     }
     else {
         $upload_dir = '../uploaded_files/';
@@ -64,30 +63,29 @@ if ($_POST) {
                 }
             }
         }
+
+        $query = $pdo->prepare("UPDATE `users` SET `lastname`=:lastname,`firstname`=:firstname,`email`=:email,
+        `isadmin`=:isadmin,`image`=:photo WHERE `id`=:id");
+
+        $query->bindParam(':photo', $image_link);
     }
 
-    $password_hash = password_hash($password, PASSWORD_DEFAULT);
-
-    $query = $pdo->prepare("INSERT INTO `users`(`id`, `lastname`, `firstname`, `email`, `isadmin`, `password`, `image`) 
-    VALUES (null, :lastname, :firstname, :email, :isadmin, :pwd, :photo)");
-
+    $query->bindParam(':id', $id);
     $query->bindParam(':lastname', $lastname);
     $query->bindParam(':firstname', $firstname);
     $query->bindParam(':email', $email);
     $query->bindParam(':isadmin', $is_admin);
-    $query->bindParam(':pwd', $password_hash);
-    $query->bindParam(':photo', $image_link);
 
     if ($query->execute()) {
         // Si requête correcte
         $results = $query->fetchAll();
         http_response_code(200);
-        retour_json(true, "Utilisateur enregistré avec succès !", $results);
+        retour_json(true, "Utilisateur modifié avec succès !", $results);
     }
     else {
         // Si requête incorrecte
         http_response_code(400);
-        retour_json(false, "Echec de l'enregistrement.");
+        retour_json(false, "Echec de la modification.");
     }
     
 }
