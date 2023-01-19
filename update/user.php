@@ -25,6 +25,16 @@ if ($_POST) {
         return;
     }
 
+    $query = $pdo->prepare('SELECT * FROM `users` WHERE `email`=:email');
+    $query->bindParam(':email', $email);
+    $query->execute();
+    $nbResponse = count($query->fetchAll());
+
+    if ($nbResponse >= 1) {
+        retour_json(false, "Cet email existe déjà.");
+        return;
+    }
+
     if (
         empty($_FILES['user_profile']['name']) ||
         is_null($_FILES['user_profile']['name']) ||
