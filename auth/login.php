@@ -1,5 +1,5 @@
 <?php
-require '../header.php';
+include_once '../header.php';
 require "../vendor/autoload.php";
 
 use \Firebase\JWT\JWT;
@@ -10,26 +10,24 @@ if (isset($_POST)) {
     $pwd = $_POST['pwd'];
 
     if (empty(trim($email)) || empty(trim($pwd))) {
-        retour_json(false, "Nom d'utilisateur ou mot de passe incorrecte.");
+        retour_json(false, "Email ou mot de passe incorrecte.");
         return;
     }
 
     //verification du compte et mot de passe
 
-    $query = $pdo->prepare("SELECT * FROM `users` WHERE `email`=:email LIMIT 1");
+    $query = $pdo->prepare('SELECT * FROM `users` WHERE `email`=:email LIMIT 1');
     $query->bindParam(':email', $email);
     $query->execute();
-    $nb = count($query->fetchAll());
+    $nb = $query->RowCount();
     if ($nb > 0) {
-        $row = $query->fetch(PDO::FETCH_ASSOC);
-        json_encode ($row);
-        return;
-        $lastname = $row['lastname'];
-        $firstname = $row['firstname'];
-        $password_hash = $row['password'];
-        $image = $row['image'];
-        $isAdmin = $row['isadmin'];
-        $isFirstConnection = $row['isfirstconnection'];
+        $row = $query->fetchAll(PDO::FETCH_ASSOC);
+        $lastname = $row[0]['lastname'];
+        $firstname = $row[0]['firstname'];
+        $password_hash = $row[0]['password'];
+        $image = $row[0]['image'];
+        $isAdmin = $row[0]['isadmin'];
+        $isFirstConnection = $row[0]['isfirstconnection'];
 
         if (password_verify($pwd, $password_hash)) {
             $secret_key = "2txhWX#ç8800532Fvczj@";
@@ -55,7 +53,7 @@ if (isset($_POST)) {
 
             http_response_code(200);
 
-            $jwt = JWT::encode($token, $secret_key);
+            $jwt = JWT::encode($token, $secret_key, 'HS512');
             // $result =  array(
             //     "message" => "Authentification réussie.",
             //     "jwt" => $jwt,
@@ -68,13 +66,13 @@ if (isset($_POST)) {
             // );
             retour_json(true, "Connexion réussie", $jwt);
         } else {
-            http_response_code(400);
-            retour_json(false, "Utilisateur ou mot de passe incorrecte.");
+            // http_response_code(400);
+            retour_json(false, "Email ou mot de passe incorrecte.");
             return;
         }
     } else {
-        http_response_code(400);
-        retour_json(false, "Utilisateur ou mot de passe incorrecte.");
+        // http_response_code(400);
+        retour_json(false, "Email ou mot de passe incorrecte.");
         return;
     }
 }
