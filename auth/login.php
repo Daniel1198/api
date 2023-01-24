@@ -22,6 +22,7 @@ if (isset($_POST)) {
     $nb = $query->RowCount();
     if ($nb > 0) {
         $row = $query->fetchAll(PDO::FETCH_ASSOC);
+        $id = $row[0]['id'];
         $lastname = $row[0]['lastname'];
         $firstname = $row[0]['firstname'];
         $password_hash = $row[0]['password'];
@@ -43,6 +44,7 @@ if (isset($_POST)) {
                 "nbf" => $notbefore_claim,
                 "exp" => $expire_claim,
                 "data" => array(
+                    "id" => $id,
                     "lastname" => $lastname,
                     "firstname" => $firstname,
                     "image" => $image,
