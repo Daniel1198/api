@@ -56,24 +56,12 @@ if (isset($_POST)) {
             http_response_code(200);
 
             $jwt = JWT::encode($token, $secret_key, 'HS512');
-            // $result =  array(
-            //     "message" => "Authentification réussie.",
-            //     "jwt" => $jwt,
-            //     "id" => $id,
-            //     "users_email" => $users_email,
-            //     "users_nomprenoms" => $users_nomprenoms,
-            //     "users_lien_photo" => $users_lien_photo,
-            //     "users_profil" => $users_profil,
-            //     "premiereCnx" => $premiereCnx,
-            // );
             retour_json(true, "Connexion réussie", $jwt);
         } else {
-            // http_response_code(400);
             retour_json(false, "Email ou mot de passe incorrecte.");
             return;
         }
     } else {
-        // http_response_code(400);
         retour_json(false, "Email ou mot de passe incorrecte.");
         return;
     }
