@@ -5,7 +5,6 @@ require '../header.php';
 if ($_POST) {
 
     // récupération des variables
-
     $corresponding = $_POST['corresponding'];
     $object = $_POST['object'];
     $date_received = $_POST['date_received'];
@@ -25,8 +24,6 @@ if ($_POST) {
         retour_json(false, "Vérifiez que les champs ne sont pas vides.");
         return;
     }
-
-    // var_dump($_FILES['attachments']);
 
     retour_json(true, 'files', json_decode($attachments));
         return;
