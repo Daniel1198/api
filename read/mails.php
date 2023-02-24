@@ -1,7 +1,10 @@
 <?php
 
 require '../header.php';
-$query = $pdo->prepare('SELECT * FROM `users`');
+
+$id_register = $_GET['id_register'];
+$query = $pdo->prepare("SELECT * FROM `mails` LEFT JOIN `services` ON mails.id_service = services.serv_id WHERE mails.id_register = :id_register ORDER BY mails.mail_date_received DESC");
+$query->bindParam(':id_register', $id_register);
 
 if ($query->execute()) {
     $users = $query->fetchAll();
