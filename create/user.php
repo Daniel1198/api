@@ -6,11 +6,11 @@ if ($_POST) {
 
     // récupération des variables
 
-    $lastname = $_POST['lastname'];
-    $firstname = $_POST['firstname'];
-    $email = $_POST['email'];
-    $is_admin = $_POST['is_admin'];
-    $password = $_POST['password'];
+    $lastname = $_POST['user_lastname'];
+    $firstname = $_POST['user_firstname'];
+    $email = $_POST['user_email'];
+    $is_admin = $_POST['user_is_admin'];
+    $password = $_POST['user_password'];
 
     if (
         empty(trim($lastname)) || 
@@ -27,7 +27,7 @@ if ($_POST) {
         return;
     }
 
-    $query = $pdo->prepare('SELECT * FROM `users` WHERE `email`=:email');
+    $query = $pdo->prepare('SELECT * FROM `users` WHERE `user_email`=:email');
     $query->bindParam(':email', $email);
     $query->execute();
     $nbResponse = count($query->fetchAll());
@@ -78,7 +78,7 @@ if ($_POST) {
 
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-    $query = $pdo->prepare("INSERT INTO `users`(`id`, `lastname`, `firstname`, `email`, `isadmin`, `password`, `image`) 
+    $query = $pdo->prepare("INSERT INTO `users`(`user_id`, `user_lastname`, `user_firstname`, `user_email`, `user_isadmin`, `user_password`, `user_image`) 
     VALUES (null, :lastname, :firstname, :email, :isadmin, :pwd, :photo)");
 
     $query->bindParam(':lastname', $lastname);

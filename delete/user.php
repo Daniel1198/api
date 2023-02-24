@@ -2,9 +2,9 @@
 
 require '../header.php';
 
-$id = $_GET['id'];
+$id = $_GET['user_id'];
 
-$query = $pdo->prepare("DELETE FROM `users` WHERE `id`=:id Limit 1");
+$query = $pdo->prepare("DELETE FROM `users` WHERE `user_id`=:id Limit 1");
 $query->bindParam(':id', $id);
 
 if ($query->execute()) {

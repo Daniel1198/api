@@ -6,10 +6,10 @@ if ($_POST) {
 
     // récupération des variables
 
-    $id = $_POST['id'];
-    $isFirstConnection = $_POST['is_first_connection'];
-    $password = $_POST['password'];
-    $newPassword = $_POST['new_password'];
+    $id = $_POST['user_id'];
+    $isFirstConnection = $_POST['user_is_first_connection'];
+    $password = $_POST['user_password'];
+    $newPassword = $_POST['user_new_password'];
 
     if (empty(trim($password)) || is_null($password) || empty(trim($newPassword)) || is_null($newPassword)) {
         retour_json(false, "Le mot de passe saisi n'est pas valide.");
@@ -17,10 +17,10 @@ if ($_POST) {
     }
 
     if ($isFirstConnection == 1) {
-        $query = $pdo->prepare("SELECT `password` FROM `users` WHERE `id`=:id");
-        $query->bindParam('id', $id);
+        $query = $pdo->prepare("SELECT `user_password` FROM `users` WHERE `user_id`=:id");
+        $query->bindParam(':id', $id);
         $query->execute();
-        $pwd = $query->fetch(PDO::FETCH_ASSOC)["password"];
+        $pwd = $query->fetch(PDO::FETCH_ASSOC)["user_password"];
 
         if (!password_verify($password, $pwd)) {
             retour_json(false, "Le mot de passe actuel est incorrecte.");
@@ -32,11 +32,11 @@ if ($_POST) {
             return;
         }
 
-        $query = $pdo->prepare("UPDATE `users` SET `password`=:pwd, `isfirstconnection`=1 WHERE `id`=:id");
+        $query = $pdo->prepare("UPDATE `users` SET `user_password`=:pwd, `user_isfirstconnection`=1 WHERE `user_id`=:id");
     }
 
     else {
-        $query = $pdo->prepare("UPDATE `users` SET `password`=:pwd, `isfirstconnection`=0 WHERE `id`=:id");
+        $query = $pdo->prepare("UPDATE `users` SET `user_password`=:pwd, `user_isfirstconnection`=0 WHERE `user_id`=:id");
     }
 
     $password_hash = password_hash($newPassword, PASSWORD_DEFAULT);

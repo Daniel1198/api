@@ -2,9 +2,9 @@
 
 require '../header.php';
 
-$id = $_GET['id'];
+$id = $_GET['user_id'];
 
-$query = $pdo->prepare('SELECT * FROM `users` WHERE `id`=:id LIMIT 1');
+$query = $pdo->prepare('SELECT * FROM `users` WHERE `user_id`=:id LIMIT 1');
 $query->bindParam(':id', $id);
 
 if ($query->execute()) {

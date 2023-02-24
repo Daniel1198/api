@@ -6,8 +6,8 @@ use \Firebase\JWT\JWT;
 
 if (isset($_POST)) {
 
-    $email = $_POST['email'];
-    $pwd = $_POST['pwd'];
+    $email = $_POST['user_email'];
+    $pwd = $_POST['user_pwd'];
 
     if (empty(trim($email)) || empty(trim($pwd))) {
         retour_json(false, "Email ou mot de passe incorrecte.");
@@ -16,19 +16,19 @@ if (isset($_POST)) {
 
     //verification du compte et mot de passe
 
-    $query = $pdo->prepare('SELECT * FROM `users` WHERE `email`=:email LIMIT 1');
+    $query = $pdo->prepare('SELECT * FROM `users` WHERE `user_email`=:email LIMIT 1');
     $query->bindParam(':email', $email);
     $query->execute();
     $nb = $query->RowCount();
     if ($nb > 0) {
         $row = $query->fetchAll(PDO::FETCH_ASSOC);
-        $id = $row[0]['id'];
-        $lastname = $row[0]['lastname'];
-        $firstname = $row[0]['firstname'];
-        $password_hash = $row[0]['password'];
-        $image = $row[0]['image'];
-        $isAdmin = $row[0]['isadmin'];
-        $isFirstConnection = $row[0]['isfirstconnection'];
+        $id = $row[0]['user_id'];
+        $lastname = $row[0]['user_lastname'];
+        $firstname = $row[0]['user_firstname'];
+        $password_hash = $row[0]['user_password'];
+        $image = $row[0]['user_image'];
+        $isAdmin = $row[0]['user_isadmin'];
+        $isFirstConnection = $row[0]['user_isfirstconnection'];
 
         if (password_verify($pwd, $password_hash)) {
             $secret_key = "2txhWX#ç8800532Fvczj@";
@@ -44,12 +44,12 @@ if (isset($_POST)) {
                 "nbf" => $notbefore_claim,
                 "exp" => $expire_claim,
                 "data" => array(
-                    "id" => $id,
-                    "lastname" => $lastname,
-                    "firstname" => $firstname,
-                    "image" => $image,
-                    "isAdmin" => $isAdmin,
-                    "isFirstConnection" => $isFirstConnection,
+                    "user_id" => $id,
+                    "user_lastname" => $lastname,
+                    "user_firstname" => $firstname,
+                    "user_image" => $image,
+                    "user_isAdmin" => $isAdmin,
+                    "user_isFirstConnection" => $isFirstConnection,
                 )
             );
 

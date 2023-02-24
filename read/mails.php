@@ -1,12 +1,12 @@
 <?php
 
 require '../header.php';
-$query = $pdo->prepare('SELECT * FROM `services` ORDER BY `serv_label`');
+$query = $pdo->prepare('SELECT * FROM `users`');
 
 if ($query->execute()) {
-    $services = $query->fetchAll();
+    $users = $query->fetchAll();
     http_response_code(200);
-    retour_json(true, 'services list', $services);
+    retour_json(true, 'mail list', $users);
 }
 else {
     http_response_code(400);

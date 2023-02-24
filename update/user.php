@@ -6,11 +6,11 @@ if ($_POST) {
 
     // récupération des variables
 
-    $id = $_POST['id'];
-    $lastname = $_POST['lastname'];
-    $firstname = $_POST['firstname'];
-    $email = $_POST['email'];
-    $is_admin = $_POST['is_admin'];
+    $id = $_POST['user_id'];
+    $lastname = $_POST['user_lastname'];
+    $firstname = $_POST['user_firstname'];
+    $email = $_POST['user_email'];
+    $is_admin = $_POST['user_is_admin'];
 
     if (
         empty(trim($lastname)) || 
@@ -25,23 +25,13 @@ if ($_POST) {
         return;
     }
 
-    $query = $pdo->prepare('SELECT * FROM `users` WHERE `email`=:email');
-    $query->bindParam(':email', $email);
-    $query->execute();
-    $nbResponse = count($query->fetchAll());
-
-    if ($nbResponse >= 1) {
-        retour_json(false, "Cet email existe déjà.");
-        return;
-    }
-
     if (
         empty($_FILES['user_profile']['name']) ||
         is_null($_FILES['user_profile']['name']) ||
         $_FILES['user_profile']['name'] == 'undefined'
     ) {
-        $query = $pdo->prepare("UPDATE `users` SET `lastname`=:lastname,`firstname`=:firstname,`email`=:email,
-        `isadmin`=:isadmin WHERE `id`=:id");
+        $query = $pdo->prepare("UPDATE `users` SET `user_lastname`=:lastname,`user_firstname`=:firstname,`user_email`=:email,
+        `user_isadmin`=:isadmin WHERE `user_id`=:id");
     }
     else {
         $upload_dir = '../uploaded_files/';
@@ -74,8 +64,8 @@ if ($_POST) {
             }
         }
 
-        $query = $pdo->prepare("UPDATE `users` SET `lastname`=:lastname,`firstname`=:firstname,`email`=:email,
-        `isadmin`=:isadmin,`image`=:photo WHERE `id`=:id");
+        $query = $pdo->prepare("UPDATE `users` SET `user_lastname`=:lastname,`user_firstname`=:firstname,`user_email`=:email,
+        `user_isadmin`=:isadmin,`user_image`=:photo WHERE `user_id`=:id");
 
         $query->bindParam(':photo', $image_link);
     }
