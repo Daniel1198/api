@@ -4,7 +4,7 @@ require '../header.php';
 
 $id = $_GET['mail_id'];
 
-$query = $pdo->prepare('SELECT * FROM `attachments` WHERE id_mail = :id LIMIT 1');
+$query = $pdo->prepare('SELECT * FROM `attachments` WHERE id_mail = :id');
 $query->bindParam(':id', $id);
 
 if ($query->execute()) {
