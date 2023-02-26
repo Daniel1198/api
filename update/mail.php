@@ -5,6 +5,7 @@ require '../header.php';
 if ($_POST) {
 
     // récupération des variables
+    $id = $_POST['mail_id'];
     $corresponding = $_POST['mail_corresponding'];
     $object = $_POST['mail_object'];
     $date_received = $_POST['mail_date_received'];
@@ -23,53 +24,26 @@ if ($_POST) {
         retour_json(false, "Vérifiez que les champs ne sont pas vides.");
         return;
     }
-    $sql = "START TRANSACTION;";
-    $sql .= "INSERT INTO `mails`(`mail_id`, `mail_corresponding`, `mail_object`, `mail_date_received`, `id_service`, `id_register`) VALUES (null,:corresponding,:objet,:date_received,:id_service,1);";
-    
-    if (isset($_FILES['attachments'])) {
-        $upload_dir = '../uploaded_files/documents/';
-        for ($i = 0; $i < count($_FILES['attachments']['name']); $i++) {
-            $file_name = $_FILES['attachments']['name'][$i];
-            $file_tmp_name = $_FILES['attachments']['tmp_name'][$i];
-            $file_error = $_FILES['attachments']['error'][$i];
 
-            if ($file_error > 0) {
-                $response = array(
-                    "status" => "error",
-                    "error" => true,
-                    "message" => "Error uploading the file!"
-                );
-            }
-            else {
-                $ext = pathinfo($file_name);
-                $random_name = hash('ripemd160', $file_name) . "." . $ext['extension'];
-                $upload_name = $upload_dir . strtolower($random_name);
-                $file_link = preg_replace('/\s+/', '-', $upload_name);
-    
-                if (move_uploaded_file($file_tmp_name, $file_link)) {
-                    $sql .= "INSERT INTO `attachments`(`attach_id`, `attach_label`, `attach_file`, `id_mail`) VALUES (null,'$file_name', '$file_link',(SELECT MAX(mail_id) FROM `mails`));";
-                }
-            }
-        }
-    }
+    $sql = "UPDATE `mails` SET `mail_corresponding`=:corresponding,`mail_object`=:objet,`mail_date_received`=:date_received,`id_service`=:id_service WHERE mail_id = :id";
 
-    $sql .= "COMMIT;";
     $query = $pdo->prepare($sql);
     $query->bindParam(':corresponding', $corresponding);
     $query->bindParam(':objet', $object);
     $query->bindParam(':date_received', $date_received);
     $query->bindParam(':id_service', $id_service);
+    $query->bindParam(':id', $id);
 
     if ($query->execute()) {
         // Si requête correcte
         $results = $query->fetchAll();
         http_response_code(200);
-        retour_json(true, "Courrier enregistré avec succès !", $results);
+        retour_json(true, "Courrier modifié avec succès !", $results);
     }
     else {
         // Si requête incorrecte
         http_response_code(400);
-        retour_json(false, "Echec de l'enregistrement.");
+        retour_json(false, "Echec de la modification.");
     }
 }
 

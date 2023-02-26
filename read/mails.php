@@ -12,7 +12,6 @@ else {
     $query = $pdo->prepare("SELECT * FROM `mails` LEFT JOIN `services` ON mails.id_service = services.serv_id ORDER BY mails.mail_date_received DESC");
 }
 
-
 if ($query->execute()) {
     $users = $query->fetchAll();
     http_response_code(200);
