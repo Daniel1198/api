@@ -2,10 +2,10 @@
 
 require '../header.php';
 
-$id = $_GET['mail_id'];
+$ref = $_GET['mail_ref'];
 
-$query = $pdo->prepare("DELETE FROM `mails` WHERE `mail_id`=:id Limit 1");
-$query->bindParam(':id', $id);
+$query = $pdo->prepare("DELETE FROM `mails` WHERE `mail_ref`=:ref Limit 1");
+$query->bindParam(':ref', $ref);
 
 if ($query->execute()) {
     $users = $query->fetchAll();

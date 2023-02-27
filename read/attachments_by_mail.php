@@ -2,10 +2,10 @@
 
 require '../header.php';
 
-$id = $_GET['mail_id'];
+$ref = $_GET['mail_ref'];
 
-$query = $pdo->prepare('SELECT * FROM `attachments` WHERE id_mail = :id');
-$query->bindParam(':id', $id);
+$query = $pdo->prepare('SELECT * FROM `attachments` WHERE ref_mail = :ref');
+$query->bindParam(':ref', $ref);
 
 if ($query->execute()) {
     $attachments = $query->fetchAll();
