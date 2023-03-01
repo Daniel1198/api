@@ -22,10 +22,6 @@ $query = $pdo->prepare("SELECT mail_object, COUNT(mail_object) as total FROM `ma
 $query->execute();
 $total_by_object = $query->fetchAll();
 
-// $query = $pdo->prepare("SELECT mail_object, COUNT(mail_object) as total FROM `mails` WHERE id_register = 1 AND mail_date_received BETWEEN '2023-02-27' AND '2023-03-03' GROUP BY mail_object");
-// $query->execute();
-// $total_by_object = $query->fetchAll();
-
 $stats = [
     "total_mail" => $total_mail,
     "mail_in_waiting" => $mail_in_waiting,
