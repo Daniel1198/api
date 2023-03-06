@@ -9,18 +9,15 @@ if ($_POST) {
     $object = $_POST['mail_object'];
     $date_received = $_POST['mail_date_received'];
     $id_direction = $_POST['id_direction'];
-    $id_user = $_POST['id_user'];
 
     if (
         empty(trim($corresponding)) || 
         empty(trim($object)) || 
         empty(trim($date_received)) || 
         empty(trim($id_direction)) ||
-        empty(trim($id_user)) ||
         is_null($corresponding) ||
         is_null($object) ||
         is_null($date_received) ||
-        is_null($id_user) ||
         is_null($id_direction)
     ) {
         retour_json(false, "Vérifiez que les champs ne sont pas vides.");
@@ -42,7 +39,7 @@ if ($_POST) {
     // création de l'identifiant du courrier
     $mail_ref = $mails_number + 1 . $direction_sigle . $currentYear;
 
-    $sql = "INSERT INTO `mails`(`mail_ref`, `mail_corresponding`, `mail_object`, `mail_date_received`, `id_direction`, `id_register`, `id_user`) VALUES (:mail_ref,:corresponding,:objet,:date_received,:id_direction,1,:id_user);";
+    $sql = "INSERT INTO `mails`(`mail_ref`, `mail_corresponding`, `mail_object`, `mail_date_received`, `id_direction`, `id_register`) VALUES (:mail_ref,:corresponding,:objet,:date_received,:id_direction,1);";
 
     $query = $pdo->prepare($sql);
     $query->bindParam(':mail_ref', $mail_ref);
@@ -50,7 +47,6 @@ if ($_POST) {
     $query->bindParam(':objet', $object);
     $query->bindParam(':date_received', $date_received);
     $query->bindParam(':id_direction', $id_direction);
-    $query->bindParam(':id_user', $id_user);
 
     if ($query->execute()) {
         // Si requête correcte
