@@ -10,16 +10,17 @@ if ($_POST) {
     $lastname = $_POST['user_lastname'];
     $firstname = $_POST['user_firstname'];
     $email = $_POST['user_email'];
-    $is_admin = $_POST['user_is_admin'];
+    $role = $_POST['user_role'];
 
     if (
         empty(trim($lastname)) || 
         empty(trim($firstname)) || 
-        empty(trim($email)) || 
+        empty(trim($email)) ||
+        empty(trim($role)) || 
         is_null($lastname) ||
         is_null($firstname) ||
         is_null($email) ||
-        is_null($is_admin)
+        is_null($role)
     ) {
         retour_json(false, "Vérifiez que les champs ne sont pas vides.");
         return;
@@ -31,7 +32,7 @@ if ($_POST) {
         $_FILES['user_profile']['name'] == 'undefined'
     ) {
         $query = $pdo->prepare("UPDATE `users` SET `user_lastname`=:lastname,`user_firstname`=:firstname,`user_email`=:email,
-        `user_isadmin`=:isadmin WHERE `user_id`=:id");
+        `user_role`=:role_user WHERE `user_id`=:id");
     }
     else {
         $upload_dir = '../uploaded_files/';
@@ -65,7 +66,7 @@ if ($_POST) {
         }
 
         $query = $pdo->prepare("UPDATE `users` SET `user_lastname`=:lastname,`user_firstname`=:firstname,`user_email`=:email,
-        `user_isadmin`=:isadmin,`user_image`=:photo WHERE `user_id`=:id");
+        `user_role`=:role_user,`user_image`=:photo WHERE `user_id`=:id");
 
         $query->bindParam(':photo', $image_link);
     }
@@ -74,7 +75,7 @@ if ($_POST) {
     $query->bindParam(':lastname', $lastname);
     $query->bindParam(':firstname', $firstname);
     $query->bindParam(':email', $email);
-    $query->bindParam(':isadmin', $is_admin);
+    $query->bindParam(':role_user', $role);
 
     if ($query->execute()) {
         // Si requête correcte

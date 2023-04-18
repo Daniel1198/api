@@ -27,7 +27,7 @@ if (isset($_POST)) {
         $firstname = $row[0]['user_firstname'];
         $password_hash = $row[0]['user_password'];
         $image = $row[0]['user_image'];
-        $isAdmin = $row[0]['user_isadmin'];
+        $role = $row[0]['user_role'];
         $isFirstConnection = $row[0]['user_isfirstconnection'];
 
         if (password_verify($pwd, $password_hash)) {
@@ -48,7 +48,7 @@ if (isset($_POST)) {
                     "user_lastname" => $lastname,
                     "user_firstname" => $firstname,
                     "user_image" => $image,
-                    "user_isAdmin" => $isAdmin,
+                    "user_role" => $role,
                     "user_isFirstConnection" => $isFirstConnection,
                 )
             );

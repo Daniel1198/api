@@ -9,7 +9,7 @@ if ($_POST) {
     $lastname = $_POST['user_lastname'];
     $firstname = $_POST['user_firstname'];
     $email = $_POST['user_email'];
-    $is_admin = $_POST['user_is_admin'];
+    $role = $_POST['user_role'];
     $password = $_POST['user_password'];
 
     if (
@@ -17,10 +17,11 @@ if ($_POST) {
         empty(trim($firstname)) || 
         empty(trim($email)) || 
         empty(trim($password)) ||
+        empty(trim($role)) ||
         is_null($lastname) ||
         is_null($firstname) ||
         is_null($email) ||
-        is_null($is_admin) ||
+        is_null($role) ||
         is_null($password)
     ) {
         retour_json(false, "Vérifiez que les champs ne sont pas vides.");
@@ -78,13 +79,13 @@ if ($_POST) {
 
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-    $query = $pdo->prepare("INSERT INTO `users`(`user_id`, `user_lastname`, `user_firstname`, `user_email`, `user_isadmin`, `user_password`, `user_image`) 
-    VALUES (null, :lastname, :firstname, :email, :isadmin, :pwd, :photo)");
+    $query = $pdo->prepare("INSERT INTO `users`(`user_id`, `user_lastname`, `user_firstname`, `user_email`, `user_role`, `user_password`, `user_image`) 
+    VALUES (null, :lastname, :firstname, :email, :role_user, :pwd, :photo)");
 
     $query->bindParam(':lastname', $lastname);
     $query->bindParam(':firstname', $firstname);
     $query->bindParam(':email', $email);
-    $query->bindParam(':isadmin', $is_admin);
+    $query->bindParam(':role_user', $role);
     $query->bindParam(':pwd', $password_hash);
     $query->bindParam(':photo', $image_link);
 
