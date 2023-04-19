@@ -52,9 +52,8 @@ if ($_POST) {
 
     if ($query->execute()) {
         // Si requête correcte
-        $results = $query->fetchAll();
         http_response_code(200);
-        retour_json(true, "Courrier enregistré avec succès !", $results);
+        retour_json(true, "Courrier enregistré avec succès !", $mail_ref);
     }
     else {
         // Si requête incorrecte
