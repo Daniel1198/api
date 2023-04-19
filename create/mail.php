@@ -30,15 +30,23 @@ if ($_POST) {
     $query->execute();
     $direction_sigle = $query->fetchAll(PDO::FETCH_ASSOC)[0]['dir_sigle'];
 
-    $sql = "SELECT COUNT(mail_ref) as mail_number FROM `mails`";
-    $query = $pdo->prepare($sql);
-    $query->execute();
-    $mails_number = $query->fetchAll(PDO::FETCH_ASSOC)[0]['mail_number'];
+    
 
     $currentYear = date("y");
 
+    $i = 0;
+    do {
+        $i++;
+        // création d'un nouvel identifiant
+        $mail_ref = $i + 1 . $direction_sigle . $currentYear;
+        $sql = "SELECT mail_ref FROM `mails` WHERE mail_ref=:ref";
+        $query = $pdo->prepare($sql);
+        $query->bindParam(':ref', $mail_ref);
+        $query->execute();
+        $mails_number = count($query->fetchAll(PDO::FETCH_ASSOC));
+    } while ($mails_number >= 1);
+
     // création de l'identifiant du courrier
-    $mail_ref = $mails_number + 1 . $direction_sigle . $currentYear;
 
     $sql = "INSERT INTO `mails`(`mail_ref`, `mail_corresponding`, `mail_object`, `mail_date_received`, `id_direction`, `id_register`, `id_user`) VALUES (:mail_ref,:corresponding,:objet,:date_received,:id_direction,1, :id_user);";
 
