@@ -25,25 +25,23 @@ if ($_POST) {
         return;
     }
 
-    $sql = "UPDATE `mails` SET `mail_corresponding`=:corresponding,`mail_object`=:objet,`mail_date_received`=:date_received,`id_direction`=:id_direction WHERE mail_ref = :ref";
+    try {
+        $sql = "UPDATE `mails` SET `mail_corresponding`=:corresponding,`mail_object`=:objet,`mail_date_received`=:date_received,`id_direction`=:id_direction WHERE mail_ref = :ref";
 
-    $query = $pdo->prepare($sql);
-    $query->bindParam(':corresponding', $corresponding);
-    $query->bindParam(':objet', $object);
-    $query->bindParam(':date_received', $date_received);
-    $query->bindParam(':id_direction', $id_direction);
-    $query->bindParam(':ref', $ref);
+        $query = $pdo->prepare($sql);
+        $query->bindParam(':corresponding', $corresponding);
+        $query->bindParam(':objet', $object);
+        $query->bindParam(':date_received', $date_received);
+        $query->bindParam(':id_direction', $id_direction);
+        $query->bindParam(':ref', $ref);
 
-    if ($query->execute()) {
-        // Si requête correcte
-        $results = $query->fetchAll();
-        http_response_code(200);
-        retour_json(true, "Courrier modifié avec succès !", $results);
-    }
-    else {
-        // Si requête incorrecte
-        http_response_code(400);
-        retour_json(false, "Echec de la modification.");
+        if ($query->execute()) {
+            // Si requête correcte
+            http_response_code(200);
+            retour_json(true, "Courrier modifié avec succès !");
+        }
+    } catch (PDOException $e) {
+        retour_json(false, "Echec de la modification du courrier");
     }
 }
 

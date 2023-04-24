@@ -48,25 +48,25 @@ if ($_POST) {
 
     // création de l'identifiant du courrier
 
-    $sql = "INSERT INTO `mails`(`mail_ref`, `mail_corresponding`, `mail_object`, `mail_date_received`, `id_direction`, `id_register`, `id_user`) VALUES (:mail_ref,:corresponding,:objet,:date_received,:id_direction,1, :id_user);";
+    try {
+        $sql = "INSERT INTO `mails`(`mail_ref`, `mail_corresponding`, `mail_object`, `mail_date_received`, `id_direction`, `id_register`, `id_user`) VALUES (:mail_ref,:corresponding,:objet,:date_received,:id_direction,1, :id_user);";
 
-    $query = $pdo->prepare($sql);
-    $query->bindParam(':mail_ref', $mail_ref);
-    $query->bindParam(':corresponding', $corresponding);
-    $query->bindParam(':objet', $object);
-    $query->bindParam(':date_received', $date_received);
-    $query->bindParam(':id_direction', $id_direction);
-    $query->bindParam(':id_user', $id_user);
+        $query = $pdo->prepare($sql);
+        $query->bindParam(':mail_ref', $mail_ref);
+        $query->bindParam(':corresponding', $corresponding);
+        $query->bindParam(':objet', $object);
+        $query->bindParam(':date_received', $date_received);
+        $query->bindParam(':id_direction', $id_direction);
+        $query->bindParam(':id_user', $id_user);
+        
 
-    if ($query->execute()) {
-        // Si requête correcte
-        http_response_code(200);
-        retour_json(true, "Courrier enregistré avec succès !", $mail_ref);
-    }
-    else {
-        // Si requête incorrecte
-        http_response_code(400);
-        retour_json(false, "Echec de l'enregistrement.");
+        if ($query->execute()) {
+            http_response_code(200);
+            retour_json(true, "Courrier enregistré avec succès !", $mail_ref);
+        }
+
+    } catch (PDOException $e) {
+        retour_json(false, "Echec de l'enregistrement du courrier");
     }
 }
 
